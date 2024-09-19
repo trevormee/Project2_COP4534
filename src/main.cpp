@@ -1,7 +1,6 @@
 
 #include "Headers/AnalyticalModel.hpp"
 
-
 #include <iostream>
 int main()
 {
