@@ -11,6 +11,7 @@
 #define ANALYTICALMODEL_HPP
 
 #include <iostream>
+#include <math.h>
 
 class AnalyticalModel
 {
@@ -19,7 +20,7 @@ class AnalyticalModel
         double lambda, mu, M;
 
         // Helper function to compute factorials
-        double factorial(double x);
+        unsigned int factorial(int x);
 
         // Helper function for computing percent idle time
         double P0Summation(double _lamda, double _mu, double _M);
@@ -42,5 +43,8 @@ class AnalyticalModel
 
         // Compute W_q
         double ComputeWq(double, double, double);
+
+        // Compute utilization factor
+        double ComputeUtilFactor(double, double, double);
 };
 #endif
