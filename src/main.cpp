@@ -8,16 +8,13 @@
 ***************************************************************/
 
 #include "Headers/AnalyticalModel.hpp"
+#include "Headers/PriorityQueue.hpp"
 #include <iostream>
 
 int main()
 {
 
 /**********Start analytical model testing -- PASSED******/
-    double lambda = 2;
-    double mu = 3;
-    double M = 2;
- 
 /*
 The analytical model should produce these results for the following inputs:
 
@@ -31,6 +28,10 @@ The analytical model should produce these results for the following inputs:
     Lq = 0.083
     Wq = 0.0417
 */
+    
+    double lambda = 2;
+    double mu = 3;
+    double M = 2;
 
     AnalyticalModel am;
     double p0 = am.ComputeP0(lambda, mu, M);
@@ -53,5 +54,31 @@ The analytical model should produce these results for the following inputs:
 
 // End analytical model testing -- PASSED!
 /***************************************************************/
+
+    PriorityQueue pq;
+    std::cout << "Inserting values into the priority queue...\n";
+    //pq.Insert(5.0);
+    //pq.Insert(3.0);
+    //pq.Insert(10.0);
+    //pq.Insert(1.0);
+    //pq.Insert(7.0);
+
+    pq.Insert(5.0);
+    //pq.Insert(1.0);
+    //pq.Insert(2.0);
+    //pq.Insert(4.0);
+    //pq.Insert(5.0);
+    pq.Traversal();
+
+    std::cout << "\nServing elements from the priority queue (should be in ascending order):\n";
+    while (true) {
+        float served = pq.Serve();
+        if (served == -1.0) break; // Break if heap is empty
+        
+        std::cout << "Served: " << served << std::endl;
+    }
+
+    std::cout << "\nPriority queue test completed.\n";
+
     return 0;
 }
