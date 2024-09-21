@@ -4,7 +4,7 @@
   Project 2
 
   @brief Contains function definitions for various analytical 
-         model computations
+         model  computations
 ***************************************************************/
 
 #include "Headers/AnalyticalModel.hpp"

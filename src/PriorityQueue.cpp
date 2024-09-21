@@ -4,7 +4,7 @@
   Project 2
 
   @brief Contains function definitions for setting up a priority
-         queue, inserting and serving a customer
+         queue, inserting and serving a  customer
 ***************************************************************/
 
 #include "Headers/PriorityQueue.hpp"
@@ -12,59 +12,33 @@
 /*
   @brief Default constructor
 */
-//PriorityQueue::PriorityQueue() {}
-PriorityQueue::PriorityQueue() : theSize(0) {
-    // Initialize the heap
-    heap[0] = -1; // We won't use index 0, heap starts from 1
-}
-
-/*
-  @brief Parameterized constructor to construct an 
-         empty heap
-  @param
-*
-PriorityQueue::PriorityQueue(int initialSize)
+PriorityQueue::PriorityQueue()
 {
-
+    theSize = 0;
+    heap[0] = -1;
 }
-*/
 
 /*
   @brief Percolate up thru heap while maintaining
          heap condition
   @param x: event time to insert
 */
-void PriorityQueue::PercolateUp(double x)
+void PriorityQueue::PercolateUp(float x)
 {
-    //std::cout << "\nx = " << x << std::endl;
-    //std::cout << "The size = " << theSize << std::endl;
     heap[0] = x;
-    std::cout << "heap[0] = " << heap[0] << std::endl;
-    int slot = ++theSize;//theSize + 1;
-    std::cout << "slot = " << slot << std::endl;
-    while(x < heap[slot/2])
+    int slot = ++theSize;
+    std::cout << "Inserted element: " << std::fixed << std::setprecision(2) << x << " at index: " << slot << std::endl; // Print the initial insertion
+    
+    while (x < heap[slot / 2])
     {
-      heap[slot] = heap[slot / 2];
-      slot /= 2;
+        heap[slot] = heap[slot / 2];
+        slot /= 2;
+        std::cout << "Moved element to index: " << slot << " with value: " << heap[slot] << std::endl; // Print each move
     }
-
-    heap[slot] = x; 
-    std::cout << "Final slot = " << slot << std::endl;
-    std::cout << "heap[slot] = " << heap[slot] << std::endl;
-  
-    /*
-    float temp = heap[index];
-    std::cout << "Temp = " << temp << std::endl;
-
-    // Move up the heap while the parent is greater than the current element
-    while (index > 1 && heap[index / 2] > temp) {
-        heap[index] = heap[index / 2];
-        index /= 2;
-    }
-
-    heap[index] = temp;
-    std::cout << "Heap[index] = " << heap[index] << std::endl;
-    */
+    
+    heap[slot] = x;
+    std::cout << "Final position of element " << x << " is index: " << slot << std::endl; // Print final position
+    std::cout << std::endl;
 }
 
 /*
@@ -99,22 +73,30 @@ void PriorityQueue::PercolateDown(int slot)
 */
 void PriorityQueue::Insert(float time)
 {
-    if(theSize > SIZE)
+    // If heap is empty, set value of index 1 = time
+    if(isEmpty())
     {
-      std::cerr << "Heap/Priority Queue is full!" << std::endl;
-      return;
+        std::cout << "Heap was empty" << std::endl;
+        heap[1] = time;
+        theSize++;
     }
-    std::cout << "the size = " << theSize << std::endl;
-    std::cout << "time = " << time << std::endl;
-    heap[++theSize] = time;
-    std::cout << "the size = " << theSize << std::endl;
-    std::cout << "heap ++ the size = " << time << std::endl;
-    //PercolateUp(theSize);
-    PercolateUp(time);
+    // Check for heap overflow
+    else if(theSize > SIZE)
+    {
+        std::cerr << "Heap already full! Overflow Error!" << std::endl;
+        return;
+    }
+    // Percolate up 
+    else
+    {
+        PercolateUp(time);
+    }
+
 }
 
 /*
   @brief Serve (pop) highest priority customer (min)
+
   @return The event at top of heap 
 */
 float PriorityQueue::Serve()
@@ -126,19 +108,31 @@ float PriorityQueue::Serve()
     }
 
     float deleteItem = heap[1];
-    std::cout << "(1) deleted item = " << deleteItem << std::endl;
     heap[1] = heap[theSize--];
-    std::cout << "heap[thesize--] " << heap[1] << std::endl;
     PercolateDown(1);
-    std::cout << "(2) deleted item = " << deleteItem << std::endl;
     return deleteItem;
 }
 
+
 void PriorityQueue::Traversal()
 {
-  for(int i = 0; i < theSize; ++i)
-  {
-      int y = heap[i];
-      std::cout << "Index: " <<  i << " Value: "<< y << std::endl;
-  }
+    std::cout << "Traversal theSize = " << theSize << std::endl;
+    for(int i = 1; i < theSize + 1; i++)
+    {
+      if(theSize > 0)
+        std::cout << "Index: " << i << " has a value of : " << std::fixed << std::setprecision(2) << heap[i] << std::endl;
+      else
+        std::cout << "No traversal needed. Heap is empty!" << std::endl;
+    }
+}
+
+/*
+  @brief Checks if heap is empty
+
+  @return true if theSize == 0
+          false if theSize != 0
+*/
+bool PriorityQueue::isEmpty()
+{
+    return theSize == 0;
 }

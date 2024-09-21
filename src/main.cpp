@@ -16,7 +16,7 @@ int main()
 
 /**********Start analytical model testing -- PASSED******/
 /*
-The analytical model should produce these results for the following inputs:
+The   analytical model should produce these results for the following inputs:
 
     lambda (l) = 2
     mu (m) = 3
@@ -56,21 +56,14 @@ The analytical model should produce these results for the following inputs:
 /***************************************************************/
 
     PriorityQueue pq;
-    std::cout << "Inserting values into the priority queue...\n";
-    //pq.Insert(5.0);
-    //pq.Insert(3.0);
-    //pq.Insert(10.0);
-    //pq.Insert(1.0);
-    //pq.Insert(7.0);
-
-    pq.Insert(5.0);
-    //pq.Insert(1.0);
-    //pq.Insert(2.0);
-    //pq.Insert(4.0);
-    //pq.Insert(5.0);
+    std::cout << "\nInserting values into the priority queue...\n";
+    pq.Insert(100.0);
+    pq.Insert(50.0);
+    pq.Insert(200.0);
+    pq.Insert(250.0);
     pq.Traversal();
 
-    std::cout << "\nServing elements from the priority queue (should be in ascending order):\n";
+    std::cout << "\nServing elements from the priority queue\n";
     while (true) {
         float served = pq.Serve();
         if (served == -1.0) break; // Break if heap is empty
@@ -78,6 +71,7 @@ The analytical model should produce these results for the following inputs:
         std::cout << "Served: " << served << std::endl;
     }
 
+    pq.Traversal();
     std::cout << "\nPriority queue test completed.\n";
 
     return 0;

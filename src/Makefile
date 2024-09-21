@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 
 OBJS = main.o AnalyticalModel.o PriorityQueue.o
-GCH = Headers/AnalyticalModel.hpp.gch Headers/PriorityQueue.hpp.gch
+GCH = Headers/AnalyticalModel.hpp.gch 
 
 proj2 : ${OBJS}
 	 ${CXX} $(CXXFLAGS) -o $@ ${OBJS}

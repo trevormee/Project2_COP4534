@@ -4,7 +4,7 @@
   Project 2
 
   @brief Contains function declarations for various analytical 
-         model computations
+         model  computations
 ***************************************************************/
 
 #ifndef ANALYTICALMODEL_HPP
