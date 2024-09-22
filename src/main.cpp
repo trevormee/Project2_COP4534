@@ -9,6 +9,9 @@
 
 #include "Headers/AnalyticalModel.hpp"
 #include "Headers/PriorityQueue.hpp"
+#include "Headers/Node.hpp"
+#include "Headers/Fifo.hpp"
+
 #include <iostream>
 
 int main()
@@ -55,6 +58,8 @@ The   analytical model should produce these results for the following inputs:
 // End analytical model testing -- PASSED!
 /***************************************************************/
 
+//          START PRIORITY QUEUE TESTS
+
     PriorityQueue pq;
     std::cout << "\nInserting values into the priority queue...\n";
     pq.Insert(100.0);
@@ -73,6 +78,39 @@ The   analytical model should produce these results for the following inputs:
 
     pq.Traversal();
     std::cout << "\nPriority queue test completed.\n";
+
+//      END PRIORITY QUEUE TESTS!!!
+/***************************************************************/
+
+//      START FIFO TESTS
+
+    Fifo queue;
+
+    // Insert some elements into the queue
+    std::cout << "\nInserting customers into the FIFO queue...\n";
+    queue.Insert(5.0, 2.0);  // pqTime = 5.0, arrivalTime = 2.0
+    queue.Insert(3.0, 1.5);  // pqTime = 3.0, arrivalTime = 1.5
+    queue.Insert(8.0, 4.0);  // pqTime = 8.0, arrivalTime = 4.0
+    queue.Insert(1.0, 0.5);  // pqTime = 1.0, arrivalTime = 0.5
+
+    // Serve elements (FIFO - first in, first out)
+    std::cout << "\nServing customers from the FIFO queue...\n";
+    while (!queue.isEmpty()) {
+        Node* servedCustomer = queue.Serve();
+        std::cout << "Served customer with pqTime: " << servedCustomer->pqTime 
+                  << ", arrivalTime: " << servedCustomer->arrivalTime << "\n";
+
+        // Free memory for the served customer (optional but recommended to avoid memory leaks)
+        delete servedCustomer;
+    }
+
+    std::cout << "\nFIFO queue test completed.\n";
+
+
+
+//      END FIFO TESTS
+/***************************************************************/
+
 
     return 0;
 }
