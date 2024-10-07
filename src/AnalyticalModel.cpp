@@ -4,7 +4,7 @@
   Project 2
 
   @brief Contains function definitions for various analytical 
-         model  computations
+         model computations
 ***************************************************************/
 
 #include "Headers/AnalyticalModel.hpp"
@@ -16,6 +16,17 @@
 AnalyticalModel::AnalyticalModel()
 {
     lambda = mu = M = 0;
+}
+
+/*
+  @brief Parameterized constructor to set private instance 
+         variables to values found from test files
+*/
+AnalyticalModel::AnalyticalModel(double _lambda, double _mu, double _M)
+{
+    lambda = _lambda;
+    mu = _mu;
+    M = _M;
 }
 
 /*
@@ -75,10 +86,10 @@ double AnalyticalModel::P0Summation(double _lamda, double _mu, double _M)
 */
 double AnalyticalModel::ComputeP0(double _lamda, double _mu, double _M)
 {
-    double summation = P0Summation(_lamda, _mu, _M);      // 5/3 1.667
-    unsigned int fact = factorial(static_cast<int>(_M));  // 2
+    double summation = P0Summation(_lamda, _mu, _M);      
+    unsigned int fact = factorial(static_cast<int>(_M)); 
     double oneDivFact = 1 / static_cast<double>(fact); 
-    double lambdaDivMuExponent = pow((_lamda / _mu), _M); // 4/9 0.444
+    double lambdaDivMuExponent = pow((_lamda / _mu), _M); 
     double MMuDivMMmuMinusLambda = ( (_M * _mu) / ( (_M * _mu) - _lamda) );
    
     return 1 / ( (summation) + ( (oneDivFact) * (lambdaDivMuExponent) * (MMuDivMMmuMinusLambda) ) );
@@ -128,7 +139,7 @@ double AnalyticalModel::ComputeW(double _lamda, double _mu, double _M)
             _mu avg number of customers we can service per unit time
             _M number of service channels
 
-  @return
+  @return Avg number of customrs in queue
 */
 double AnalyticalModel::ComputeLq(double _lamda, double _mu, double _M)
 {
@@ -164,4 +175,24 @@ double AnalyticalModel::ComputeWq(double _lamda, double _mu, double _M)
 double AnalyticalModel::ComputeUtilFactor(double _lamda, double _mu, double _M)
 {
     return _lamda / (_M * _mu);
+}
+
+/*
+    @brief Prints analytical model results
+*/
+void AnalyticalModel::PrintResults()
+{
+    double p0 = ComputeP0(lambda, mu, M);
+    double L = ComputeL(lambda, mu, M);
+    double W = ComputeW(lambda, mu, M);
+    double Lq = ComputeLq(lambda, mu, M);
+    double Wq = ComputeWq(lambda, mu, M);
+    double utilFactor = ComputeUtilFactor(lambda, mu, M);
+
+    std::cout << "Value of p0 = " << p0 << std::endl;
+    std::cout << "Value of L = " << L << std::endl;
+    std::cout << "Value of W = " << W << std::endl;
+    std::cout << "Value of Lq = " << Lq << std::endl;
+    std::cout << "Value of Wq = " << Wq << std::endl;
+    std::cout << "Value of Utilization Factor = " << utilFactor << std::endl;
 }

@@ -1,44 +1,32 @@
-/***************************************************************
-  Student Name: Trevor Mee
-  File Name: PriorityQueue.cpp
-  Project 2
-
-  @brief Contains function definitions for setting up a priority
-         queue, inserting and serving a  customer
-***************************************************************/
-
 #include "Headers/PriorityQueue.hpp"
 
 /*
-  @brief Default constructor
+  @brief Default constructor to set the size of the 
+         heap and first index of heap to default value
 */
 PriorityQueue::PriorityQueue()
 {
     theSize = 0;
-    heap[0] = -1;
+    heap[0] = nullptr;
 }
 
 /*
   @brief Percolate up thru heap while maintaining
          heap condition
-  @param x: event time to insert
+  @param node: Node to insert
 */
-void PriorityQueue::PercolateUp(float x)
+void PriorityQueue::PercolateUp(Node* node)
 {
-    heap[0] = x;
+    heap[0] = node;  
     int slot = ++theSize;
-    std::cout << "Inserted element: " << std::fixed << std::setprecision(2) << x << " at index: " << slot << std::endl; // Print the initial insertion
     
-    while (x < heap[slot / 2])
+    while (node->pqTime < heap[slot / 2]->pqTime)
     {
         heap[slot] = heap[slot / 2];
         slot /= 2;
-        std::cout << "Moved element to index: " << slot << " with value: " << heap[slot] << std::endl; // Print each move
     }
     
-    heap[slot] = x;
-    std::cout << "Final position of element " << x << " is index: " << slot << std::endl; // Print final position
-    std::cout << std::endl;
+    heap[slot] = node;
 }
 
 /*
@@ -49,19 +37,19 @@ void PriorityQueue::PercolateUp(float x)
 void PriorityQueue::PercolateDown(int slot)
 {
     int child;
-    int tmp = heap[slot];
+    Node* tmp = heap[slot];
 
     while(slot * 2 <= theSize)
     {
-      child = slot * 2;
-      if(child != theSize && ( heap[child + 1] < heap[child] ))
-          child++;
-      if(heap[child] < tmp)
-          heap[slot] = heap[child];
-      else
-          break;
-      
-      slot = child;
+        child = slot * 2;
+        if(child != theSize && ( heap[child + 1]->pqTime < heap[child]->pqTime ))
+            child++;
+        if(heap[child]->pqTime < tmp->pqTime)
+            heap[slot] = heap[child];
+        else
+            break;
+        
+        slot = child;
     }
 
     heap[slot] = tmp;
@@ -69,62 +57,63 @@ void PriorityQueue::PercolateDown(int slot)
 
 /*
   @brief Add a new item to the priority queue
-  @param time: event time to be inserted
+  @param node: Node to be inserted
 */
-void PriorityQueue::Insert(float time)
+void PriorityQueue::Insert(Node* node)
 {
-    // If heap is empty, set value of index 1 = time
     if(isEmpty())
     {
-        std::cout << "Heap was empty" << std::endl;
-        heap[1] = time;
+        heap[1] = node;
         theSize++;
     }
-    // Check for heap overflow
     else if(theSize > SIZE)
     {
         std::cerr << "Heap already full! Overflow Error!" << std::endl;
         return;
     }
-    // Percolate up 
     else
     {
-        PercolateUp(time);
+        PercolateUp(node);
     }
-
 }
+
 
 /*
   @brief Serve (pop) highest priority customer (min)
 
   @return The event at top of heap 
 */
-float PriorityQueue::Serve()
+Node* PriorityQueue::Serve()
 {
     if(theSize == 0)
     {
       std::cerr << "Heap/Priority Queue is empty!" << std::endl;
-      return -1.0;
+      return nullptr;
     }
 
-    float deleteItem = heap[1];
+    Node* deleteNode = heap[1];
     heap[1] = heap[theSize--];
-    PercolateDown(1);
-    return deleteItem;
+
+    return deleteNode;
 }
 
+/*
+    @brief peeks (grabs) first node at index 1 in heap
 
-void PriorityQueue::Traversal()
+    @return heap[1] if heap is not empty
+            nullptr if heap is empty
+*/
+Node* PriorityQueue::Peek()
 {
-    std::cout << "Traversal theSize = " << theSize << std::endl;
-    for(int i = 1; i < theSize + 1; i++)
+    if(!isEmpty())
     {
-      if(theSize > 0)
-        std::cout << "Index: " << i << " has a value of : " << std::fixed << std::setprecision(2) << heap[i] << std::endl;
-      else
-        std::cout << "No traversal needed. Heap is empty!" << std::endl;
+        return heap[1];
     }
+
+    std::cerr << "Could not peek! PQ is empty!" << std::endl;
+    return nullptr;
 }
+
 
 /*
   @brief Checks if heap is empty
@@ -135,4 +124,17 @@ void PriorityQueue::Traversal()
 bool PriorityQueue::isEmpty()
 {
     return theSize == 0;
+}
+
+void PriorityQueue::Traversal()
+{
+    std::cout << "Traversal theSize = " << theSize << std::endl;
+    for(int i = 1; i < theSize + 1; i++)
+    {
+        if(theSize > 0)
+            std::cout << "Index: " << i << " has a pqTime of : " 
+                      << std::fixed << std::setprecision(2) << heap[i]->pqTime << " " << heap[i]->isArrival << std::endl;
+        else
+            std::cout << "No traversal needed. Heap is empty!" << std::endl;
+    }
 }

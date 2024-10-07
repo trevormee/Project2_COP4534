@@ -16,6 +16,7 @@
 class Fifo
 {
     private:
+        // Private Instance Variables
         Node* front;
         Node* back;
 
@@ -24,12 +25,17 @@ class Fifo
         Fifo();
 
         // Insert a new customer
-        void Insert(float pqTime, float arrivalTime);
-
+        void Insert(Node* newCustomer);
+        
         // Serve (delete) a customer
         Node* Serve();
 
         // Checks if Fifo Queue is empty
         bool isEmpty();
+
+        void Traversal();
+        
+        // Returns the current size of the fifo queue
+        int getSize();
 };
 #endif

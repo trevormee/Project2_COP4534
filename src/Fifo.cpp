@@ -19,19 +19,15 @@ Fifo::Fifo()
 }
 
 /*
-    @brief Inserts a new element to the end of the queue
+    @brief Inserts a new node (customer) into FIFO queue
 */
-void Fifo::Insert(float pqTime, float arrivalTime)
+void Fifo::Insert(Node* newCustomer)
 {
-    // new customer instance
-    Node* newCustomer = new Node(pqTime, arrivalTime);
-    // check if rear is null
     if(back == nullptr)
     {
         front = newCustomer;
         back = newCustomer;
     }
-    // else set new customer to back of queue
     else
     {
         back->nextCustomer = newCustomer;
@@ -46,27 +42,21 @@ void Fifo::Insert(float pqTime, float arrivalTime)
 */
 Node* Fifo::Serve()
 {
-    // check if queue is empty
     if(isEmpty())
     {
-        std::cerr << "Fifo Queue is Empty! Nobody to serve!" << std::endl; 
+        std::cerr << "FIFO Queue is Empty! No customers to serve" << std::endl; 
+        return nullptr;
     }
 
-    // get customer to serve
     Node* removedCustomer = front;
-
-    // set front to next customer in line
     front = front->nextCustomer;
 
-    // Check if fifo queue is now empty after serving
     if(front == nullptr)
     {
         back = nullptr;
     }
 
-    // return the served custeomer
     return removedCustomer;
-
 }
 
 /*
@@ -82,4 +72,46 @@ bool Fifo::isEmpty()
       return true;
     }
     return false;
+}
+
+/*
+    @brief Traverse and print the queue from front to back
+*/
+void Fifo::Traversal()
+{
+    Node* current = front;
+    
+    if (isEmpty())
+    {
+        std::cout << "Fifo Queue is empty." << std::endl;
+        return;
+    }
+
+    std::cout << "Fifo Queue contents (front to back):" << std::endl;
+    
+    while (current != nullptr)
+    {
+        std::cout << "Customer pqTime: " << current->pqTime;
+        std::cout << ", Arrival: " << current->isArrival << std::endl;
+        current = current->nextCustomer;
+    }
+}
+
+/*
+    @brief Checks the current size of the fifo queue
+
+    @return Current size of the fifo queue
+*/
+int Fifo::getSize()
+{
+    int count = 0;
+    Node* current = front;
+
+    while (current != nullptr)
+    {
+        count++;
+        current = current->nextCustomer;
+    }
+
+    return count;
 }
