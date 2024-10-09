@@ -29,6 +29,9 @@ class AnalyticalModel
         // Constructor
         AnalyticalModel();
 
+        // Parameterized Constructor
+        AnalyticalModel(double, double, double);
+
         // Compute P_0
         double ComputeP0(double, double, double);
 
@@ -46,5 +49,8 @@ class AnalyticalModel
 
         // Compute utilization factor
         double ComputeUtilFactor(double, double, double);
+
+        // Print analytical model results
+        void PrintResults();
 };
 #endif

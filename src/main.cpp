@@ -3,55 +3,78 @@
   File Name: main.cpp
   Project 2
 
-  @brief Contains main method to run simulation and compare the 
-         statistics with the analytical model
+  @brief Contains function to read from a text file main method 
+         to run simulation and compare the statistics with the 
+         analytical model
 ***************************************************************/
 
 #include "Headers/AnalyticalModel.hpp"
+#include "Headers/PriorityQueue.hpp"
+#include "Headers/Node.hpp"
+#include "Headers/Fifo.hpp"
+#include "Headers/Simulator.hpp"
+
 #include <iostream>
+#include <fstream>
+#include <sstream>
+
+/*
+    @brief Reads in a text file and extracts lambda, mu,
+            M, and number of events
+    @param(s) filename: file we are to read from
+              lambda: avg number of arrivals per unit time
+              mu: avg number of customer we can service per unit time
+              M: number of available service channels at a given time
+              numEvents: number of simulation arrivals to simulate
+*/
+void ReadFile(std::string& filename, double& lambda, double& mu, double& M, int& numEvents)
+{
+    std::ifstream fileRead(filename);
+    
+    if (!fileRead.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return;
+    }
+
+    fileRead >> lambda;
+    fileRead >> mu;
+    fileRead >> M;
+    fileRead >> numEvents;
+    
+    fileRead.close();
+}
+
 
 int main()
 {
+    double lambda = 0.0; 
+    double mu = 0.0; 
+    double M = 0.0;
+    int numEvents = 0;
 
-/**********Start analytical model testing -- PASSED******/
-    double lambda = 2;
-    double mu = 3;
-    double M = 2;
- 
-/*
-The analytical model should produce these results for the following inputs:
+    // Analytical Model & Simulation for test1.txt
+    std::string TEST1 = "../test1.txt";
+    ReadFile(TEST1, lambda, mu, M, numEvents);
 
-    lambda (l) = 2
-    mu (m) = 3
-    M = 2
+    AnalyticalModel am1(lambda, mu, M);
+    std::cout << "Analytical Model Results from test1.txt..." << std::endl;
+    am1.PrintResults();
 
-    Po = 0.5
-    L = 0.75
-    W = 0.375
-    Lq = 0.083
-    Wq = 0.0417
-*/
+    std::cout << "\nSimulation Results from test1.txt..." << std::endl;
+    Simulator s(static_cast<float>(lambda), static_cast<float>(mu), static_cast<float>(M), numEvents);
+    s.RunSim();
 
-    AnalyticalModel am;
-    double p0 = am.ComputeP0(lambda, mu, M);
-    std::cout << "Value of p0 = " << p0 << std::endl;
+    // Analytical Model & Simulation for test2.txt
+    std::string TEST2 = "../test2.txt";
+    ReadFile(TEST2, lambda, mu, M, numEvents);
 
-    double L = am.ComputeL(lambda, mu, M);
-    std::cout << "Value of L  = " << L << std::endl;
+    AnalyticalModel am2(lambda, mu, M);
+    std::cout << "\nAnalytical Model Results from test2.txt..." << std::endl;
+    am2.PrintResults();
 
-    double W = am.ComputeW(lambda, mu, M);
-    std::cout << "Value of W  = " << W << std::endl;
+    Simulator s2(static_cast<float>(lambda), static_cast<float>(mu), static_cast<float>(M), numEvents);
+    std::cout << "\nSimulation Results from test2.txt..." << std::endl;
+    s2.RunSim();
 
-    double Lq = am.ComputeLq(lambda, mu, M);
-    std::cout << "Value of Lq = " << Lq << std::endl;
-
-    double Wq = am.ComputeWq(lambda, mu, M);
-    std::cout << "Value of Wq = " << Wq << std::endl;
-
-    double utilFactor = am.ComputeUtilFactor(lambda, mu, M);
-    std::cout << "Value of U  = " << utilFactor << std::endl;
-
-// End analytical model testing -- PASSED!
-/***************************************************************/
     return 0;
 }
