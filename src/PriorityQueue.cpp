@@ -1,3 +1,12 @@
+/***************************************************************
+  Student Name: Trevor Mee
+  File Name: PriorityQueue.cpp
+  Project 2
+
+  @brief Contains function definitions for implementing a 
+         priority queue 
+***************************************************************/
+
 #include "Headers/PriorityQueue.hpp"
 
 /*
@@ -124,17 +133,4 @@ Node* PriorityQueue::Peek()
 bool PriorityQueue::isEmpty()
 {
     return theSize == 0;
-}
-
-void PriorityQueue::Traversal()
-{
-    std::cout << "Traversal theSize = " << theSize << std::endl;
-    for(int i = 1; i < theSize + 1; i++)
-    {
-        if(theSize > 0)
-            std::cout << "Index: " << i << " has a pqTime of : " 
-                      << std::fixed << std::setprecision(2) << heap[i]->pqTime << " " << heap[i]->isArrival << std::endl;
-        else
-            std::cout << "No traversal needed. Heap is empty!" << std::endl;
-    }
 }

@@ -3,7 +3,7 @@
   File Name: Fifo.cpp
   Project 2
 
-  @brief Contains function declarations for setting up,
+  @brief Contains function definitions for setting up,
          inserting, and popping from a FIFO queue
 ***************************************************************/
 
@@ -74,28 +74,6 @@ bool Fifo::isEmpty()
     return false;
 }
 
-/*
-    @brief Traverse and print the queue from front to back
-*/
-void Fifo::Traversal()
-{
-    Node* current = front;
-    
-    if (isEmpty())
-    {
-        std::cout << "Fifo Queue is empty." << std::endl;
-        return;
-    }
-
-    std::cout << "Fifo Queue contents (front to back):" << std::endl;
-    
-    while (current != nullptr)
-    {
-        std::cout << "Customer pqTime: " << current->pqTime;
-        std::cout << ", Arrival: " << current->isArrival << std::endl;
-        current = current->nextCustomer;
-    }
-}
 
 /*
     @brief Checks the current size of the fifo queue

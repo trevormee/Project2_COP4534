@@ -12,33 +12,29 @@
 #include "PriorityQueue.hpp"
 #include "Fifo.hpp"
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 
 class Simulator
 {
     private:
+        // Private instance variables
         float lambda, mu, M;
         PriorityQueue pq;
         Fifo fifo;
-
         int maxEvents;
         int serverAvailableCnt;
-        float startOfServiceTime;
-        int numCustomers;
-        float currentWaitTime;
-        int customerWaitedCnt = 0;
-        float totalWaitTime = 0.0;
-        float totalServiceTime = 0.0;
-        float totalIdleTime = 0.0;
-        int totalCustomers;
         float simulationTime;
         float lastDepartureTime;
-
-        float totalQueueLength = 0.0;  // For Lq
-        float totalSystemLength = 0.0; // For L
-        float timeLastEvent = 0.0;     // To track system idle time
-        float totalSystemTime = 0.0;   // To calculate W (time in system)
-        float totalQueueTime = 0.0;    // To calculate Wq (time in queue)
+        float totalIdleTime = 0.0;
+        int customerWaitedCnt = 0;
+        float totalQueueTime = 0.0;
+        float totalWaitTime = 0.0;
         float serviceTime;
+        float totalServiceTime = 0.0;
+        float totalSystemTime = 0.0;
+        int totalCustomers;
+        
 
     public:
         // Parameterized Constructor
@@ -53,7 +49,7 @@ class Simulator
         // Processes Statistcs for the current customer
         void ProcessStatistics(Node* customer);
 
-        // Display Simulation Statistics
+        // Prints Simulation Statistics
         void PrintSimulationResults();
 
         // Gets a random interval

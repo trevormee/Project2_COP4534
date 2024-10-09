@@ -1,3 +1,12 @@
+/***************************************************************
+  Student Name: Trevor Mee
+  File Name: PriorityQueue.hpp
+  Project 2
+
+  @brief Contains function declarations for implementing a 
+         priority queue 
+***************************************************************/
+
 #ifndef PRIORITYQUEUE_HPP
 #define PRIORITYQUEUE_HPP
 
@@ -33,8 +42,6 @@ class PriorityQueue
 
       // Get the first customer
       Node* Peek();
-
-      void Traversal();
       
       // Checks if heap is empty
       bool isEmpty();

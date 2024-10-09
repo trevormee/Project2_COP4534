@@ -21,7 +21,7 @@ Simulator::Simulator(float _lambda, float _mu, float _M, const int _maxEvents)
     mu = _mu;
     M = _M;
     maxEvents = _maxEvents;
-    serverAvailableCnt = M; 
+    serverAvailableCnt = M;
 }
 
 /*
@@ -32,36 +32,31 @@ void Simulator::RunSim()
     int totalArrivals = 0; 
     const int maxArrivals = maxEvents; 
 
-    // Place first arrivals in PQ
+    simulationTime = 0.0;
+    lastDepartureTime = 0.0;
+    
     for (int i = 0; i < M && totalArrivals < maxArrivals; i++)
     {
         float arrivals = GetNextRandomInterval(lambda);
         Node* newCustomer = new Node(arrivals, true);
         pq.Insert(newCustomer);
         totalArrivals++;
+        simulationTime = arrivals;
     }
     
-    // Process events while total number of events is still less than maxEvents
-    while (!pq.isEmpty() && totalArrivals < maxArrivals)
-    {
-        ProcessNextEvent();
-
-        if (pq.theSize <= M + 1 && totalArrivals < maxArrivals)
-        {
-            float arrivals = GetNextRandomInterval(lambda);
-            Node* newCustomer = new Node(arrivals, true);
-            pq.Insert(newCustomer);
-            totalArrivals++;
-        } 
-    }
-
-    // Process the rest of the PQ after all arrival events have been inserted
     while (!pq.isEmpty()) 
     {
         ProcessNextEvent();
+        if (pq.theSize <= M + 1 && totalArrivals < maxArrivals)
+        { 
+            float arrivals = GetNextRandomInterval(lambda) + lastDepartureTime;
+            Node* newCustomer = new Node(arrivals, true);
+            pq.Insert(newCustomer);
+            totalArrivals++;
+            simulationTime = arrivals;
+        } 
     }
     
-    std::cout << "Simulation complete. Processing final statistics...\n";
     PrintSimulationResults();
 }
 
@@ -73,14 +68,16 @@ void Simulator::ProcessNextEvent()
 {   
     Node* currCustomer = static_cast<Node*>(pq.Peek());
 
-    float timeSinceLastEvent = currCustomer->arrivalTime - timeLastEvent;
-    timeLastEvent = currCustomer->arrivalTime;
-
     // Arrival Event
     if (currCustomer->isArrival == true)
     {
         if (serverAvailableCnt > 0)
         {
+            if(serverAvailableCnt == M)
+            {
+                totalIdleTime += (currCustomer->arrivalTime - lastDepartureTime);
+            }
+
             serverAvailableCnt--;
             pq.Serve();
             currCustomer->startOfServiceTime = currCustomer->arrivalTime;
@@ -100,12 +97,10 @@ void Simulator::ProcessNextEvent()
     else 
     {
         serverAvailableCnt++;
-        if(serverAvailableCnt == M)
-        {
-            totalIdleTime = totalServiceTime + timeLastEvent;
-        }
         pq.Serve(); 
         ProcessStatistics(currCustomer);
+
+        lastDepartureTime = currCustomer->departureTime;
 
         if (!fifo.isEmpty())
         {
@@ -123,20 +118,25 @@ void Simulator::ProcessNextEvent()
 
 
 /*
-    @brief Processes and prints statistics for a given customer
+    @brief Processes statistics for a given customer
 */
 void Simulator::ProcessStatistics(Node* customer)
 {
     float currentWaitTime = customer->startOfServiceTime - customer->arrivalTime;
 
     if(currentWaitTime > 0.0)
+    {
         customerWaitedCnt++;
+        totalQueueTime += currentWaitTime;
+    }
     
     totalWaitTime = totalWaitTime + currentWaitTime;
 
     serviceTime = customer->departureTime - customer->startOfServiceTime;
     totalServiceTime = totalServiceTime + serviceTime;
 
+    float timeInSystem = customer->departureTime - customer->arrivalTime;
+    totalSystemTime += timeInSystem;
 }
 
 
@@ -145,17 +145,20 @@ void Simulator::ProcessStatistics(Node* customer)
 */
 void Simulator::PrintSimulationResults()
 {
-    totalCustomers = maxEvents;
-    
-    std::cout << "P0" << std::endl;
-    std::cout << "L" << std::endl;
-    std::cout << "W" << std::endl;
-    std::cout << "Lq" << std::endl;
-    std::cout << "Wq" << std::endl;
+    totalCustomers = maxEvents;    
 
-    std::cout << "Total Number of Customers who had to wait for service: " << customerWaitedCnt << std::endl;
+    float p0 = abs(totalIdleTime / simulationTime);
+    float w = totalSystemTime / totalCustomers;
+    float wq = totalQueueTime / totalCustomers;
+    float utilFactor = totalServiceTime / (M * simulationTime);
+    float probOfWaiting = (static_cast<float>(customerWaitedCnt) / static_cast<float>(totalCustomers)) * 100;
 
-    
+    // Print results
+    std::cout << "Simulation value of p0 = " << p0 << std::endl;
+    std::cout << "Simulation value of W = " << w << std::endl;
+    std::cout << "Simulation value for Wq = " << wq << std::endl;
+    std::cout << "Simulation value of utilization factor (rho) = " << utilFactor << std::endl;
+    std::cout << "Simulation value for the probability of waiting  = " << probOfWaiting << "%" << std::endl;   
 }
 
 /*

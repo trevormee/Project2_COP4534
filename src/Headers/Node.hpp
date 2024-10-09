@@ -3,8 +3,8 @@
   File Name: Node.hpp
   Project 2
 
-  @brief Contains a definiton for a node structure to be used
-         in class 'Fifo'
+  @brief Contains a definiton for a node to be used to represent 
+         a customer in the system
 ***************************************************************/
 
 #ifndef NODE_HPP

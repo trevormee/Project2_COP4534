@@ -32,8 +32,6 @@ class Fifo
 
         // Checks if Fifo Queue is empty
         bool isEmpty();
-
-        void Traversal();
         
         // Returns the current size of the fifo queue
         int getSize();
